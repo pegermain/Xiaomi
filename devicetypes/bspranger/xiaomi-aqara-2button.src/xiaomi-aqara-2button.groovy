@@ -1,7 +1,7 @@
 /**
- *  Aqara Button - models WXKG11LM (original & new revision) / WXKG12LM
+ *  Aqara Button - models WXKG07LM
  *  Device Handler for SmartThings - Firmware version 25.20 and newer ONLY
- *  Version 1.4.3
+ *  Version 1.0.0
  *
  *  NOTE: Do NOT use this device handler on any SmartThings hub running Firmware 24.x and older
  *        Instead use the xiaomi-aqara-button-old-firmware device handler
@@ -16,23 +16,9 @@
  *  for the specific language governing permissions and limitations under the License.
  *
  *  Original device handler code by a4refillpad, adapted for use with Aqara model by bspranger, updated for changes in firmware 25.20 by veeceeoh
- *  Additional contributions to code by alecm, alixjg, bspranger, gn0st1c, foz333, jmagnuson, rinkek, ronvandegraaf, snalee, tmleafs, twonk, veeceeoh, & xtianpaiva
+ *  Additional contributions to code by alecm, alixjg, bspranger, gn0st1c, foz333, jmagnuson, rinkek, ronvandegraaf, snalee, tmleafs, twonk, veeceeoh, xtianpaiva & 
  *
  *  Notes on capabilities of the different models:
- *  Model WXKG11LM (original revision)
- *    - Single-click results in "button 1 pushed" event
- *    - Double-click results in "button 2 pushed" event
- *    - Triple-click results in "button 3 pushed" event
- *    - Quadruple-click results in button 4 "pushed" event
- *    - Any type of click results in custom "lastPressedCoRE" event for webCoRE use
- *  Model WXKG11LM (new revision):
- *    - Single-click results in "button 1 pushed" event
- *    - Hold for longer than 400ms results in "button 1 held" event
- *    - Double-click results in "button 2 pushed" event
- *    - Release after a hold results in "button 3 pushed" event
- *    - Single or double-click results in custom "lastPressedCoRE" event for webCoRE use
- *    - Hold results in custom "lastHeldCoRE" event for webCoRE use
- *    - Release results in custom "lastReleasedCoRE" event for webCoRE use
  *  Model WXKG12LM:
  *    - Single-click results in "button 1 pushed" event
  *    - Hold for longer than 400ms results in "button 1 held" event
@@ -58,7 +44,7 @@
  import physicalgraph.zigbee.zcl.DataType
 
 metadata {
-	definition (name: "Xiaomi Aqara Button", namespace: "bspranger", author: "bspranger", minHubCoreVersion: "000.022.0002", ocfDeviceType: "x.com.st.d.remotecontroller") {
+	definition (name: "Xiaomi Aqara Button", namespace: "pegermain", author: "pegermain", minHubCoreVersion: "000.022.0002", ocfDeviceType: "x.com.st.d.remotecontroller") {
 		capability "Actuator"
 		capability "Battery"
 		capability "Button"
@@ -396,14 +382,12 @@ def initialize() {
 def setNumButtons() {
 	if (device.getDataValue("model")) {
 		def modelName = device.getDataValue("model")
-		def modelText = "Button WXKG12LM"
+		def modelText = "Button Test2"
 		state.numButtons = 4
-		if (modelName.startsWith("lumi.sensor_switch.aq2")) {
-			modelText = "Button WXKG11LM (original revision)"
-		} else if (modelName.startsWith("lumi.remote.b1acn01")) {
-			modelText = "Button WXKG11LM (new revision)"
-			state.numButtons = 3
-		}
+		if (modelName.startsWith("lumi.remote.b286acn02")) {
+			modelText = "Button WXKG07LM (original revision)"
+			state.numButtons = 2
+		} 
 		displayInfoLog(": Model is Aqara $modelText.")
 		displayInfoLog(": Number of buttons set to ${state.numButtons}.")
 		sendEvent(name: "numberOfButtons", value: state.numButtons)
